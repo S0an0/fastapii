@@ -3,13 +3,13 @@ from typing import Optional
 
 
 class Task(BaseModel):
-    id: int
     description: Optional[str] = None
 
 
-class CreateTask(BaseModel):
-    description: str = Field(..., min_length=1, description="Описание задачи")
+class CreateTask(Task):
     pass
+    #description: str = Field(..., min_length=1, description="Описание задачи")
+    
 
 class UpdateTask(BaseModel):
     description: Optional[str] = None

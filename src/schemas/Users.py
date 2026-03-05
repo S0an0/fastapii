@@ -4,7 +4,6 @@ from typing import Optional
 
 
 class UserBase(BaseModel):
-    id: int
     username: str = Field(min_length=3, max_length=100)
     email: EmailStr
 
