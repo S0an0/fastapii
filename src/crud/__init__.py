@@ -1,1 +1,1 @@
-from src.crud.Users import *
+from src.crud.Users import User ,get_user

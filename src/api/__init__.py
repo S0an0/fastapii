@@ -1,3 +1,4 @@
-from src.api.Users import router as UserRouters
-from src.api.Tasks import router as TaskRouters
-from src.api.TaskUserAssociation import router as AssociationTU
+from .Users import router as UserRouters
+from .Tasks import router as TaskRouters
+from .auth import router as AuthRouters
+from .TaskUserAssociation import router as AssociationTU

@@ -1,2 +1,2 @@
-from src.core.config import settings
-from src.core.security import pwd_context ,hash_password
+from .config import settings
+from .hashing import pwd_context

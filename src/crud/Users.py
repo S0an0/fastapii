@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from typing import Optional
 from sqlalchemy.engine import Result
-from src.models import User
+from src.models.Users import User
 from src.schemas import UserCreate, UserUpdate
 
 async def get_user(db: AsyncSession, user_id: int) -> User | None:
@@ -13,9 +13,11 @@ async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
     stmt = select(User).where(User.email == email)
     return await db.scalar(stmt)
 
-async def get_user_by_username(db: AsyncSession, username: str) -> Optional[User]:
+async def get_user_by_username(db: AsyncSession, username: str) -> User | None:
+    """Получение пользователя по username"""
     stmt = select(User).where(User.username == username)
-    return await db.scalar(stmt)
+    result = await db.execute(stmt)
+    return result.scalar_one_or_none()
 
 async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[User]:
     stmt = select(User).offset(skip).limit(limit)
