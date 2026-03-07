@@ -9,6 +9,7 @@ app = FastAPI()
 app.include_router(UserRouters)
 app.include_router(TaskRouters)
 app.include_router(AssociationTU)
+
 async def setup_database():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.drop_all)

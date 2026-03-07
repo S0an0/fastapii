@@ -5,7 +5,6 @@ from sqlalchemy.engine import Result
 from src.models import User
 from src.schemas import UserCreate, UserUpdate
 
-
 async def get_user(db: AsyncSession, user_id: int) -> User | None:
     return await db.get(User, user_id)
 
@@ -14,20 +13,37 @@ async def get_user_by_email(db: AsyncSession, email: str) -> Optional[User]:
     stmt = select(User).where(User.email == email)
     return await db.scalar(stmt)
 
+async def get_user_by_username(db: AsyncSession, username: str) -> Optional[User]:
+    stmt = select(User).where(User.username == username)
+    return await db.scalar(stmt)
 
 async def get_users(db: AsyncSession, skip: int = 0, limit: int = 100) -> list[User]:
     stmt = select(User).offset(skip).limit(limit)
     result: Result = await db.execute(stmt)
     return result.scalars().all()
 
+async def get_user_by_id(db: AsyncSession, user_id: int) -> Optional[User]:
+    return await db.get(User, user_id)
+
 
 async def create_user(db: AsyncSession, data: UserCreate) -> User:
+   
+    existing_email = await get_user_by_email(db, data.email)
+    if existing_email:
+        raise ValueError(f"Email {data.email} already registered")
     
-    existing = await get_user_by_email(db, data.email)
-    if existing:
-        raise ValueError(f"Email {data.email!r} already registered")
-
-    user = User(**data.model_dump())
+    existing_username = await get_user_by_username(db, data.username)
+    if existing_username:
+        raise ValueError(f"Username {data.username} already taken")
+    
+    user = User(
+        username=data.username,
+        email=data.email,
+        hashed_password=""
+    )
+    
+    user.set_password(data.password)
+    
     db.add(user)
     await db.commit()
     await db.refresh(user)
