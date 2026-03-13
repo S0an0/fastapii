@@ -1,0 +1,1 @@
+from src.auth.auth_config import auth
